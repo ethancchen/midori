@@ -29,7 +29,7 @@ def main():
 
     if 'authenticated' not in st.session_state:
 
-        # Change it to false before deployment
+        # TODO: Change it to false before deployment
         st.session_state["authenticated"] = True
 
     # Check if user is authenticated
@@ -52,24 +52,32 @@ def main():
                 st.error(error_message)
     else:
         # Clear the login elements
-        st.empty()
+        # st.empty()
 
-        
+        if 'menu_selection' not in st.session_state:
+            st.session_state['menu_selection'] = 'Welcome'  # Default page
 
         st.sidebar.title("Navigation")
         pages = ["Welcome", "Get started", "Evaluator", "Business Zone", "About"]
-        selected_page = st.sidebar.radio(" ", pages)
 
-        if selected_page == "Welcome":
+        # Updating the menu selection and rerunning the script if the selection changes
+        new_selection = st.sidebar.radio("Choose a page", pages)
+        if new_selection != st.session_state['menu_selection']:
+            st.session_state['menu_selection'] = new_selection
+            st.experimental_rerun()  # Rerun the script to reflect the new page selection
+
+        # Load the selected page
+        if st.session_state['menu_selection'] == "Welcome":
             page_welcome()
-        elif selected_page == "Get started":
+        elif st.session_state['menu_selection'] == "Get started":
             page_get_started()
-        elif selected_page == "Evaluator":
+        elif st.session_state['menu_selection'] == "Evaluator":
             page_evaluator()
-        elif selected_page == "Business Zone":
+        elif st.session_state['menu_selection'] == "Business Zone":
             page_business_zone()
-        elif selected_page == "About":
+        elif st.session_state['menu_selection'] == "About":
             page_about()
+
 
 if __name__ == "__main__":
     main()
