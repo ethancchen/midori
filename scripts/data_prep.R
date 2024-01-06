@@ -1,9 +1,9 @@
 # Load necessary libraries
-library(dplyr)
+library(tidyverse)
 library(stringr)
 
 # Read the CSV file with explicit encoding specification
-file_path <- "./data/initial_data_set.csv"
+file_path <- "midori/csv/AI EarthHack Dataset.csv"
 init_data <- read.csv(file_path, stringsAsFactors = FALSE, fileEncoding = "UTF-8")
 
 # Process the data, removing short problem and solutions.
@@ -18,4 +18,4 @@ result_data <- init_data %>%
 view(result_data)
 
 # Write the processed data to a new CSV file
-write.csv(result_data, "result_data.csv", row.names = FALSE)
+write.csv(result_data, "clean_data.csv", row.names = FALSE)
