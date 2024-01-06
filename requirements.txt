@@ -347,3 +347,4 @@ websocket-client==1.7.0
     # via jupyter-server
 widgetsnbextension==4.0.9
     # via ipywidgets
+pyodbc==5.0.1
