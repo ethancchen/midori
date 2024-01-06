@@ -2,26 +2,15 @@
 
 import streamlit as st
 import pandas as pd
+import get_started as gs
+
 
 def page_welcome():
     st.markdown("<h1 style='text-align: left; color: #808000;'>MIDORI</h1>", unsafe_allow_html=True)
     st.write("Welcome to Midori. Circular economy idea evaluator tool.")
 
 def page_get_started():
-    st.title("Get Started Page")
-    st.write("On this page, you can upload a CSV file to get started.")
-
-    # File uploader for CSV
-    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
-
-    # Data cleaning
-    if uploaded_file is not None:
-        st.write("File Uploaded!")
-        
-        # Process the uploaded file (optional)
-        df = pd.read_csv(uploaded_file)
-        st.write("Preview of the uploaded data:")
-        st.write(df.head())
+    gs.get_started_page()
 
 def page_evaluator():
     st.title("Evaluator Page")
@@ -39,7 +28,9 @@ def main():
     correct_password = "password"
 
     if 'authenticated' not in st.session_state:
-        st.session_state["authenticated"] = False
+
+        # Change it to false before deployment
+        st.session_state["authenticated"] = True
 
     # Check if user is authenticated
     if not st.session_state['authenticated']:
