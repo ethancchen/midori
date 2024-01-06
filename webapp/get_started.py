@@ -2,9 +2,6 @@
 import streamlit as st
 import pandas as pd
 
-import streamlit as st
-import pandas as pd
-
 def change_page_to_evaluator():
     st.session_state["menu_selection"] = "Evaluator"
     st.experimental_rerun()
