@@ -44,7 +44,10 @@ def main():
     # Check if user is authenticated
     if not st.session_state['authenticated']:
         # User input for login
-        st.header("Login")
+
+        st.markdown("<h1 style='text-align: left; color: #808000;'>MIDORI</h1>", unsafe_allow_html=True)
+        st.write("Login to use our awesome idea eval tool")
+
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
 
@@ -58,8 +61,6 @@ def main():
                 st.error(error_message)
     else:
         # Clear the login elements
-
-        st.write("Login successful!")
         st.empty()
 
         
