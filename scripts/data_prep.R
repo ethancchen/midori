@@ -13,8 +13,11 @@ result_data <- init_data %>%
          res_sent_cnt = sapply(str_extract_all(solution, "[^.!?]+[.!?]"), length),
          r_char_cnt = sapply(solution, nchar),
          p_char_cnt = sapply(problem, nchar)) %>%
-  filter((res_sent_cnt > 10 | r_char_cnt >= 250) & p_char_cnt > 42) %>%
-  select(c(problem, id, solution))
+  filter((res_sent_cnt > 10 | r_char_cnt >= 250) & p_char_cnt > 42) 
+  #select(c(problem, id, solution)) 
+
+result_data |> max(result_data$r_char_cnt)
+  
 
 view(result_data)
 
