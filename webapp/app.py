@@ -52,7 +52,7 @@ def main():
                 st.error(error_message)
     else:
         # Clear the login elements
-        # st.empty()
+        placeholder = st.empty()
 
         if 'menu_selection' not in st.session_state:
             st.session_state['menu_selection'] = 'Welcome'  # Default page
@@ -61,10 +61,9 @@ def main():
         pages = ["Welcome", "Get started", "Evaluator", "Business Zone", "About"]
 
         # Updating the menu selection and rerunning the script if the selection changes
-        new_selection = st.sidebar.radio("Choose a page", pages)
+        new_selection = st.sidebar.radio("Choose a page", pages, index=pages.index(st.session_state["menu_selection"]))
         if new_selection != st.session_state['menu_selection']:
             st.session_state['menu_selection'] = new_selection
-            st.experimental_rerun()  # Rerun the script to reflect the new page selection
 
         # Load the selected page
         if st.session_state['menu_selection'] == "Welcome":
