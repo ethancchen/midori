@@ -5,7 +5,9 @@ import pyodbc
 @st.cache_resource
 def init_connection():
     return pyodbc.connect(
-      "DRIVER={ODBC Driver 18 for SQL Server};Server=tcp:midori.database.windows.net,1433;Database=streamlit;Uid=jsch;Pwd={Cjs_1990987};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;",
+      "DRIVER={ODBC Driver 18 for SQL Server};Server=tcp:midori.database.windows.net,1433;Database=streamlit;Uid=" 
+      + st.secrets["username"] + 
+      ";Pwd={" + st.secrets["password"] + "};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;",
       autocommit = True
       )
 
@@ -44,8 +46,9 @@ def insert_record(table, columns, records):
     conn.commit()
     
 #remove_table("PeopleInfo")
-insert_record("Test", ["userId", "pwd_hash"], ["'user7', '5671732671536725187658675483625143'"])
-insert_record("Test", ["userId", "pwd_hash"], ["'user8', '1321345356425432543254325'"])
+#create_table("CREATE TABLE Test1 (userId VARCHAR(8000) PRIMARY KEY, pwd_hash VARCHAR(8000) NOT NULL);")
+insert_record("Test1", ["userId", "pwd_hash"], ["'user3', '5671732671536725187658675483625143'"])
+insert_record("Test1", ["userId", "pwd_hash"], ["'user4', '1321345356425432543254325'"])
 # Perform query.
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
 @st.cache_data(ttl=None)
@@ -55,7 +58,7 @@ def run_query(query):
         return cur.fetchall()
 
 # Run a SELECT query on the 'products' table
-rows = run_query("SELECT * FROM Test;")
+rows = run_query("SELECT * FROM Test1;")
 
 for row in rows:
     st.write(row)
