@@ -2,26 +2,15 @@
 
 import streamlit as st
 import pandas as pd
+import get_started as gs
+
 
 def page_welcome():
     st.markdown("<h1 style='text-align: left; color: #808000;'>MIDORI</h1>", unsafe_allow_html=True)
     st.write("Welcome to Midori. Circular economy idea evaluator tool.")
 
 def page_get_started():
-    st.title("Get Started Page")
-    st.write("On this page, you can upload a CSV file to get started.")
-
-    # File uploader for CSV
-    uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
-
-    # Data cleaning
-    if uploaded_file is not None:
-        st.write("File Uploaded!")
-        
-        # Process the uploaded file (optional)
-        df = pd.read_csv(uploaded_file)
-        st.write("Preview of the uploaded data:")
-        st.write(df.head())
+    gs.get_started_page()
 
 def page_evaluator():
     st.title("Evaluator Page")
@@ -32,19 +21,24 @@ def page_business_zone():
     st.write("Lean Canvas Generated here")
 
 def page_about():
-    st.title("Meet the authors")
+    st.title("Meet the Team")
 
 def main():
     correct_username = "user"
     correct_password = "password"
 
     if 'authenticated' not in st.session_state:
-        st.session_state["authenticated"] = False
+
+        # TODO: Change it to false before deployment
+        st.session_state["authenticated"] = True
 
     # Check if user is authenticated
     if not st.session_state['authenticated']:
         # User input for login
-        st.header("Login")
+
+        st.markdown("<h1 style='text-align: left; color: #808000;'>MIDORI</h1>", unsafe_allow_html=True)
+        st.write("Login to use our awesome idea eval tool")
+
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
 
@@ -58,26 +52,35 @@ def main():
                 st.error(error_message)
     else:
         # Clear the login elements
-
-        st.write("Login successful!")
-        st.empty()
-
-        
+        if 'menu_selection' not in st.session_state:
+            st.session_state['menu_selection'] = 'Welcome'  # Default page
+            st.experimental_rerun()
 
         st.sidebar.title("Navigation")
         pages = ["Welcome", "Get started", "Evaluator", "Business Zone", "About"]
-        selected_page = st.sidebar.radio(" ", pages)
 
-        if selected_page == "Welcome":
-            page_welcome()
-        elif selected_page == "Get started":
-            page_get_started()
-        elif selected_page == "Evaluator":
-            page_evaluator()
-        elif selected_page == "Business Zone":
-            page_business_zone()
-        elif selected_page == "About":
-            page_about()
+        # Updating the menu selection and rerunning the script if the selection changes
+        current_selection = st.session_state["menu_selection"]
+        new_selection = st.sidebar.radio("Choose a page", pages, index=pages.index(current_selection))
+        if new_selection != current_selection:
+            st.session_state['menu_selection'] = new_selection
+            st.experimental_rerun()
+
+        # Load the selected page
+        match st.session_state['menu_selection']:
+            case "Welcome":
+                page_welcome()
+            case "Get started":
+                page_get_started()
+            case "Evaluator":
+                page_evaluator()
+            case "Business Zone":
+                page_business_zone()
+            case "About":
+                page_about()
+            case _:
+                st.write("Page not found")
+
 
 if __name__ == "__main__":
     main()
