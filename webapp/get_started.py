@@ -3,10 +3,18 @@ import streamlit as st
 import pandas as pd
 
 def change_page_to_evaluator():
-    st.empty()
+    # st.empty()
     st.session_state["menu_selection"] = "Evaluator"
 
+# def write_stuff():
+#     bro = st.empty()
+#     with bro.container():
+#         st.write("yo")
+#     bro.write("bro writing")
+
 def handle_button_press():
+    # message_placeholder = st.session_state.get("message_placeholder")
+    # message_placeholder.empty()
     uploaded_file = st.session_state.get("uploaded_file", None)
     problem = st.session_state.get("problem", "")
     solution = st.session_state.get("solution", "")
@@ -21,7 +29,7 @@ def handle_button_press():
         change_page_to_evaluator()
     elif len(problem) >= 50 and len(solution) >= 250:
         # Process the manually entered fields
-        st.write("Proceeding to the Evaluation Page...")
+        # st.write("Proceeding to the Evaluation Page...")
         change_page_to_evaluator()
     else:
         if len(problem) < 50:
@@ -45,5 +53,10 @@ def get_started_page():
     problem = st.text_input("Problem", key="problem")
     solution = st.text_area("Proposed Solution", key="solution")
 
+    # if "message_placeholder" not in st.session_state:
+    #     st.session_state["message_placeholder"] = st.empty()
+
     # Next button to proceed to the evaluation page
     st.button("Next", on_click=handle_button_press)
+
+    # st.button("Yah", on_click=write_stuff)

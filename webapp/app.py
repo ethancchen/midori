@@ -3,6 +3,7 @@
 import streamlit as st
 import pandas as pd
 import get_started as gs
+# import get_started_prev as gs
 
 
 def page_welcome():
@@ -52,30 +53,34 @@ def main():
                 st.error(error_message)
     else:
         # Clear the login elements
-        placeholder = st.empty()
-
         if 'menu_selection' not in st.session_state:
             st.session_state['menu_selection'] = 'Welcome'  # Default page
+            st.experimental_rerun()
 
         st.sidebar.title("Navigation")
         pages = ["Welcome", "Get started", "Evaluator", "Business Zone", "About"]
 
         # Updating the menu selection and rerunning the script if the selection changes
-        new_selection = st.sidebar.radio("Choose a page", pages, index=pages.index(st.session_state["menu_selection"]))
-        if new_selection != st.session_state['menu_selection']:
+        current_selection = st.session_state["menu_selection"]
+        new_selection = st.sidebar.radio("Choose a page", pages, index=pages.index(current_selection))
+        if new_selection != current_selection:
             st.session_state['menu_selection'] = new_selection
+            st.experimental_rerun()
 
         # Load the selected page
-        if st.session_state['menu_selection'] == "Welcome":
-            page_welcome()
-        elif st.session_state['menu_selection'] == "Get started":
-            page_get_started()
-        elif st.session_state['menu_selection'] == "Evaluator":
-            page_evaluator()
-        elif st.session_state['menu_selection'] == "Business Zone":
-            page_business_zone()
-        elif st.session_state['menu_selection'] == "About":
-            page_about()
+        match st.session_state['menu_selection']:
+            case "Welcome":
+                page_welcome()
+            case "Get started":
+                page_get_started()
+            case "Evaluator":
+                page_evaluator()
+            case "Business Zone":
+                page_business_zone()
+            case "About":
+                page_about()
+            case _:
+                st.write("Page not found")
 
 
 if __name__ == "__main__":
