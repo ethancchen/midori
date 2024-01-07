@@ -8,7 +8,7 @@ draw = ImageDraw.Draw(image_template)
 
 # Choose a font and size
 font_path = '../fonts/Montserrat-Black.otf'  # Update to the path of a font file
-font_size = 12
+font_size = 14
 font = ImageFont.truetype(font_path, font_size)
 
 # Define the coordinates for each box on the Lean Canvas (left, top, right, bottom)
@@ -18,9 +18,9 @@ horiz_top_y2 = 400
 horiz_bottom_y2 = 700
 horiz_top_y3 = 760
 horiz_bottom_y3 = 1000
-vert_left_x1 = 4
+vert_left_x1 = 14
 vert_right_x1 = 260
-vert_left_x2 = 280
+vert_left_x2 = 290
 vert_right_x2 = 540
 vert_left_x3 = 570
 vert_right_x3 = 810
@@ -50,11 +50,11 @@ electronic typesetting, remaining essentially unchanged. It was popularised in
 the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, 
 and more recently with desktop publishing software like Aldus PageMaker including 
 versions of Lorem Ipsum.
-"""
+""" * 2
 # Define the text content for each box
 box_texts = {
-    "Problem": "Describe the problem bro bro bro ...",
-    "Solution": "Describe the solution \nbro bro bro ...",
+    "Problem": f"Describe the problem {filler_text}...",
+    "Solution": f"Describe the solution {filler_text}...",
     "Unique Value Proposition": "Describe the Unique Value Proposition...",
     # "Unfair Advantage": "Describe the Unfair Advantage...",
     # "Channels": "Describe the Unfair Advantage...",
@@ -65,10 +65,8 @@ box_texts = {
 
 # Function to wrap and position text within a box
 def draw_text_in_box(draw, text, box, font):
-    print(len(text))
     x1, y1, x2, y2 = box
     box_width = x2 - x1
-    box_height = y2 - y1
 
     # Estimate characters per line based on average character width at the given font size
     average_char_width = draw.textlength('x', font=font)
@@ -79,22 +77,17 @@ def draw_text_in_box(draw, text, box, font):
 
     y_offset = y1
     for line in lines:
-        # Get text dimensions using textlength and getsize
-        text_width = draw.textlength(line, font=font)
-        print(text_width)
-        # text_height = font.getsize(line)[1]  # Use font.getsize for height
-        text_height = font.getbbox(line)[3]
-        print(text_height)
+        # Get text dimensions for height
+        text_height = draw.textbbox((0, 0), line, font=font)[3]
 
         # Check if there's enough vertical space left to draw the text
         if y_offset + text_height <= y2:
-            x_offset = x1 + (box_width - text_width) // 2  # Center text horizontally
-            draw.text((x_offset, y_offset), line, fill=(0, 0, 0), font=font)
+            # Left align text by using x1 as the x_offset
+            draw.text((x1, y_offset), line, fill=(0, 0, 0), font=font)
             y_offset += text_height
         else:
             # Stop if the text exceeds the box height
             break
-
 
 
 # Iterate over each box and draw the text
@@ -105,41 +98,3 @@ for box_name, text in box_texts.items():
 updated_canvas_path = '../images/drawn_lean_canvas.png'
 image_template.save(updated_canvas_path)
 image_template.show()
-
-
-# Coordinates: (17, 41)
-# Coordinates: (265, 44)
-# Coordinates: (26, 691)
-# Coordinates: (262, 695)
-# Coordinates: (295, 51)
-# Coordinates: (545, 49)
-# Coordinates: (299, 336)
-# Coordinates: (537, 338)
-# Coordinates: (298, 403)
-# Coordinates: (535, 401)
-# Coordinates: (299, 695)
-# Coordinates: (537, 694)
-# Coordinates: (574, 47)
-# Coordinates: (820, 51)
-# Coordinates: (575, 696)
-# Coordinates: (817, 701)
-# Coordinates: (848, 46)
-# Coordinates: (1098, 46)
-# Coordinates: (850, 339)
-# Coordinates: (1098, 338)
-# Coordinates: (848, 404)
-# Coordinates: (1101, 407)
-# Coordinates: (851, 695)
-# Coordinates: (1098, 699)
-# Coordinates: (1124, 41)
-# Coordinates: (1376, 47)
-# Coordinates: (1130, 694)
-# Coordinates: (1378, 699)
-# Coordinates: (20, 761)
-# Coordinates: (682, 762)
-# Coordinates: (26, 988)
-# Coordinates: (680, 996)
-# Coordinates: (715, 759)
-# Coordinates: (1374, 754)
-# Coordinates: (714, 994)
-# Coordinates: (1375, 995)
