@@ -148,7 +148,8 @@ def get_data(df):
 
     # st.write("in function")
     openai.api_key = st.session_state["api_key"]
-
+    if 'org_df' not in st.session_state:
+        st.session_state['org_df'] = df
 
     # st.write(input_string)
 
@@ -173,6 +174,8 @@ def get_data(df):
     # st.write("Converted scores")
     # st.write(df_numeric.head())
 
+    if 'ans_df' not in st.session_state:
+        st.session_state['ans_df'] = df_numeric
 
     #rank pairs
     x = 0.25 # filter to get only top x% of ranks
@@ -182,6 +185,11 @@ def get_data(df):
 
     st.write("The top Ideas!")
     st.write(df_numeric.head())
+
+    
+
+    if 'ranked_df' not in st.session_state:
+        st.session_state['ranked_df'] = df_numeric
 
 
 
