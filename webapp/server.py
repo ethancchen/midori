@@ -12,40 +12,50 @@ def init_connection():
 conn = init_connection()
 
 cursor = conn.cursor()
-@st.cache_data(ttl=None)
-def create():
-    cursor.execute('''
-        CREATE TABLE PeopleInfo (
-                PersonId INTEGER PRIMARY KEY,
-                FirstName TEXT NOT NULL,
-                LastName  TEXT NOT NULL,
-                Age INTEGER NULL,
-                CreatedAt TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL
-        
-        );
-        ''')
-conn.commit()
-@st.cache_data(ttl=None)
-def insert():
-    cursor.execute('''
-                INSERT INTO PeopleInfo (PersonId, FirstName, LastName, Age)
-                VALUES
-                (1,'Bob','Smith', 55),
-                (2, 'Jenny','Smith', 66)
-                ''')
-conn.commit()
 
+# Pass a table as string, records is a list of recoreds in string.
+@st.cache_data(ttl=None)
+def create_table(cmd):
+    cursor.execute(cmd)
+    conn.commit()
+    
+# Pass a table as a string.    
+@st.cache_data(ttl=None)
+def remove_table(table):
+    cmd = "DROP TABLE " + table
+    cursor.execute(cmd)
+    conn.commit()
+    
+# Pass a table as a string, records is a list of records in string.
+@st.cache_data(ttl=None)
+def insert_record(table, columns, records):
+    cmd = "INSERT INTO " + table + " ("
+    cmd = cmd + columns[0]
+    
+    for i in range(1, len(columns)):
+        cmd = cmd + ", " + columns[i]
+    cmd = cmd + ") VALUES "
+    
+    for row in records:
+        cmd = cmd + "(" + row + ") "
+    
+    cmd = cmd + ";"
+    cursor.execute(cmd)
+    conn.commit()
+    
+#remove_table("PeopleInfo")
+insert_record("Test", ["userId", "pwd_hash"], ["'user7', '5671732671536725187658675483625143'"])
+insert_record("Test", ["userId", "pwd_hash"], ["'user8', '1321345356425432543254325'"])
 # Perform query.
 # Uses st.cache_data to only rerun when the query changes or after 10 min.
-@st.cache_data(ttl=1000)
+@st.cache_data(ttl=None)
 def run_query(query):
     with init_connection().cursor() as cur:
         cur.execute(query)
         return cur.fetchall()
 
 # Run a SELECT query on the 'products' table
-rows = run_query("SELECT * FROM PeopleInfo;")
+rows = run_query("SELECT * FROM Test;")
 
-# Print results.
 for row in rows:
-    st.write(f"{row[0]} has a :{row[1]}:")
+    st.write(row)
