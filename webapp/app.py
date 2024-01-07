@@ -18,7 +18,6 @@ def page_get_started():
     gs.get_started_page()
 
 def page_evaluator():
-    st.title("Evaluator Page")
     ev.page_evaluator()
 
 def page_choose_idea():
@@ -68,8 +67,11 @@ def main():
     if 'api_key' not in st.session_state:
         st.session_state["api_key"]= "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"
     
+    if 'type' not in st.session_state:
+        st.session_state["type"] = None
+
     if 'authenticated' not in st.session_state:
-        st.session_state["authenticated"] = False
+        st.session_state["authenticated"] = False # reset to False
         
     if 'session_initialized' not in st.session_state:
         st.session_state['current_user'] = None

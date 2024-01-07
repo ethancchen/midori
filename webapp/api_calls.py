@@ -2,6 +2,7 @@ import openai
 import streamlit as st
 import re
 import pandas as pd
+import numpy as np
 
 
 def calculate_scores(llm_response: pd.Series, feature_weights: list) -> float:
@@ -78,8 +79,6 @@ def generate_ans(text):
     return df
 
 
-
-
 def generate_ans_df(df):
     # st.write(df.head())
     ans_df = pd.DataFrame(columns=["relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"])
@@ -87,7 +86,7 @@ def generate_ans_df(df):
     # st.write(ans_df.head())
 
     for index, row in df.iterrows():
-        problem_value = row['Problem ']
+        problem_value = row['Problem']
         solution_value = row['Solution']
 
         input_string = "Problem : " + problem_value + "\n" + "Solution : " + solution_value
@@ -102,14 +101,8 @@ def generate_ans_df(df):
     return ans_df
 
 
-
-
-
 def get_data_single(input_string):
-
-    st.write("in function")
     openai.api_key = st.session_state["api_key"]
-
 
     # st.write(input_string)
 
@@ -123,7 +116,6 @@ def get_data_single(input_string):
 
     value_mapping = {"Yes": 1, "No": -1, "Not Known": 0}
     df_numeric = df.replace(value_mapping)
-    st.write(df_numeric.head())
 
     feature_weights = {"applicable": 0.2, 
                     "heavy_investment": 0.2,
@@ -134,7 +126,7 @@ def get_data_single(input_string):
 
     df_numeric["scores"] = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1)
 
-    st.write("See scores Below")
+    st.write("**Resulting data from prompting Generative AI.**")
     st.write(df_numeric.head())
     
 
@@ -143,6 +135,36 @@ def get_data_single(input_string):
     # num_top_pairs = int(x * len(df_numeric))
     # df_numeric.sort_values(by="scores", ascending=False).head(num_top_pairs).head()
 
+
+def handle_rank_button(top_x_to_rank: int):
+    value_mapping = {"Yes": 1, "No": -1, "Not Known": 0}
+    df = st.session_state["ans_df"]
+    df_numeric = df.replace(value_mapping)
+    feature_weights = {"applicable": 0.2,
+                       "heavy_investment": 0.2,
+                       "monetary_benefits": 0.2,
+                       "scalable": 0.2,
+                       "payback_period": 0.2}
+    assert(sum(feature_weights.values()) == 1)
+
+    # df_numeric.insert(loc = 0, column = 'scores', value = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1))
+
+    # do not assert(x_prop) b/c the user can see this
+    n = len(df_numeric)
+    num_top_pairs = int(top_x_to_rank/100 * n)
+    st.write(num_top_pairs)
+
+    if (1/n * 100 < top_x_to_rank <= 100):
+        st.write(f"Choosing the highest **{top_x_to_rank:.2f}**%, or **{num_top_pairs}**, of all problem : solution pairs ranked by weighted scores.")
+
+        df_rank_filtered = df_numeric.sort_values(by="scores", ascending=False).iloc[:num_top_pairs]
+        # TODO: how do we break ties? What if there aren't that many unique score values?
+        df_rank_filtered.index = np.arange(1, len(df_rank_filtered) + 1)
+        st.write(df_rank_filtered)
+    else:
+        st.write(f"Please choose a valid proportion between {int(1/n * 100)} and 100% of pairs to select.")
+
+    # TODO: Add option to see and/or download full ranked, sorted, and unfiltered dataset.
 
 def get_data(df):
 
@@ -155,7 +177,7 @@ def get_data(df):
 
     df = generate_ans_df(df)
 
-    st.write("The answers")
+    st.write("**Resulting data from prompting Generative AI.**")
     st.write(df)
 
     df["relevance"] = df["relevance"].str.strip()
@@ -177,16 +199,27 @@ def get_data(df):
     if 'ans_df' not in st.session_state:
         st.session_state['ans_df'] = df_numeric
 
-    #rank pairs
-    x = 0.25 # filter to get only top x% of ranks
-    num_top_pairs = int(x * len(df_numeric))
-    df_numeric.sort_values(by="scores", ascending=False).head(num_top_pairs).head()
+    # rank pairs
+
+    # allow option for integer (vs. just %) number of pairs
+    top_x_to_rank = st.number_input(label = "Percentage of desired top scores to rank and filter",
+                                    min_value = 1.0/len(df_numeric) * 100,
+                                    max_value = 100.0,
+                                    value = 1.0/len(df_numeric) * 100,
+                                    step = 0.01,
+                                    )
+
+    handle_rank_button(top_x_to_rank)
+
+    # x = 0.25 # filter to get only top x% of ranks
+    # num_top_pairs = int(x * len(df_numeric))
+    # df_numeric.sort_values(by="scores", ascending=False).head(num_top_pairs).head()
 
 
-    st.write("The top Ideas!")
-    st.write(df_numeric.head())
+    # st.write("The top Ideas!")
+    # st.write(df_numeric.head())
 
     
 
-    if 'ranked_df' not in st.session_state:
-        st.session_state['ranked_df'] = df_numeric
+    # if 'ranked_df' not in st.session_state:
+    #     st.session_state['ranked_df'] = df_numeric
