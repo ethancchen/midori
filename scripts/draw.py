@@ -8,7 +8,7 @@ draw = ImageDraw.Draw(image_template)
 
 # Choose a font and size
 font_path = '../fonts/Montserrat-Black.otf'  # Update to the path of a font file
-font_size = 14
+font_size = 18
 font = ImageFont.truetype(font_path, font_size)
 
 # Define the coordinates for each box on the Lean Canvas (left, top, right, bottom)
