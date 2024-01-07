@@ -7,8 +7,13 @@ import get_started as gs
 import mongoDB as mg
 import hashlib as hl
 
+import evaluator as ev
+import business_zone as bz
+import choose_idea as ci
+
 def page_welcome():
     st.markdown("<h1 style='text-align: left; color: #808000;'>MIDORI</h1>", unsafe_allow_html=True)
+    st.write(f"Hello {st.session_state['current_user']}")
     st.write("Welcome to Midori. Circular economy idea evaluator tool.")
 
 def page_get_started():
@@ -73,20 +78,35 @@ def page_evaluator():
     # No button for now b/c we change dynamically based on input
     # st.button(f"Rank top {st.session_state['top_x_to_rank']}% of scores", on_click=handle_rank_button)
 
+    ev.page_evaluator()
+    # st.title("Evaluator Page")
+    # st.write("Calculate scores here")
+
+def page_choose_idea():
+    st.title("Pick the idea you wish to create a business model of")
+    ci.page_choose_idea()
+
 def page_business_zone():
-    st.title("Business Zone Page")
-    st.write("Lean Canvas Generated here")
+    # st.title("Business Zone Page")
+    # st.write("Lean Canvas Generated here")
+    bz.page_business_zone()
+
 
 def page_about():
     st.title("Meet the Team")
     
 def handle_user_change():
     st.session_state["authenticated"] = False
+    st.session_state['current_user'] = None
+    st.session_state['current_user_hash'] = None
+
     
 def handle_login(db, username_hash, password_hash, username):
     if mg.authenticate_user(db, username_hash, password_hash):
         st.success("Logged in as {}".format(username))
         st.session_state['authenticated'] = True
+        st.session_state['current_user'] = username
+        st.session_state['current_user_hash'] = username_hash
     else:
         error_message = "Incorrect username or password"
         st.error(error_message)
@@ -108,6 +128,11 @@ def main():
     
     if 'authenticated' not in st.session_state:
         st.session_state["authenticated"] = False
+        
+    if 'session_initialized' not in st.session_state:
+        st.session_state['current_user'] = None
+        st.session_state['current_user_hash'] = None
+        st.session_state['session_initialized'] = True
 
     # Check if user is authenticated
     if not st.session_state['authenticated']:
@@ -134,7 +159,7 @@ def main():
             st.experimental_rerun()
 
         st.sidebar.title("Navigation")
-        pages = ["Welcome", "Get started", "Evaluator", "Business Zone", "About", "Change User"]
+        pages = ["Welcome", "Get started", "Evaluator", "Choose Idea", "Business Zone", "About", "Change User"]
 
         # Updating the menu selection and rerunning the script if the selection changes
         current_selection = st.session_state["menu_selection"]
@@ -151,6 +176,8 @@ def main():
                 page_get_started()
             case "Evaluator":
                 page_evaluator()
+            case "Choose Idea":
+                page_choose_idea()
             case "Business Zone":
                 page_business_zone()
             case "About":
