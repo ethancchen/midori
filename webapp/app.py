@@ -81,9 +81,7 @@ def page_about():
     st.title("Meet the Team")
 
 def main():
-    correct_username = "user"
-    correct_password = "password"
-    
+    # Initialize mongDB.
     db = mg.db_init()
     
     if 'authenticated' not in st.session_state:
@@ -103,12 +101,13 @@ def main():
 
         # Check for login
         if st.button("Login"):
-            if username == correct_username and password == correct_password:
+            if mg.authenticate_user(db, username, password):
                 st.success("Logged in as {}".format(username))
                 st.session_state['authenticated'] = True
             else:
                 error_message = "Incorrect username or password"
                 st.error(error_message)
+    
         if st.button("Create User"):
             if mg.create_user(db, username, password):
                 st.success("Creation Successful. Proceed to login.")

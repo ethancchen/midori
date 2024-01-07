@@ -2,7 +2,7 @@ import pymongo
 import streamlit as st
 import yaml
 import streamlit_authenticator as stauth
-
+import hashlib as hl
 def db_init():
     client = pymongo.MongoClient("mongodb+srv://jiashuchen:" 
                                 + st.secrets["mongo_password"] 
@@ -44,17 +44,13 @@ def create_user(db, userID, pwd):
         st.error("User ID or password cannot be empty.")
         return False
     
-    # Assuming stauth.Hasher is correctly imported and defined
-    userID_hash = hash(userID)
-    pwd_hash = hash(pwd)
-
-    st.write(userID_hash)
+    userID_hash = hl.sha256(userID.encode('utf-8')).hexdigest()
+    pwd_hash = hl.sha256(pwd.encode('utf-8')).hexdigest()
     
     try:
         # Check if USERID already exists
         users_collection = db["users"]
         existing_user = users_collection.find_one({"userID_hash": userID_hash})
-        st.write(existing_user)
 
         if existing_user:
             st.error("User already exists. Creation request rejected.")
@@ -66,18 +62,18 @@ def create_user(db, userID, pwd):
                 "pwd_hash": pwd_hash,
                 "data": [
                     {
-                        "problem_submitted": 'ipsum',
-                        "solution_submitted": 'ipsum',
-                        "score": 100,
-                        "lean_problem": 'ipsum',
-                        "lean_solution": 'ipsum',
-                        "key_metrics": 'ipsum',
-                        "uniq_val_prop": 'ipsum',
-                        "unfair_advng": 'ipsum',
-                        "channels": 'ipsum',
-                        "customer_seg": 'ipsum',
-                        "cost_struct": 'ipsum',
-                        "rev_streams": 'ipsum'
+                        "problem_submitted": '',
+                        "solution_submitted": '',
+                        "score": -1,
+                        "lean_problem": '',
+                        "lean_solution": '',
+                        "key_metrics": '',
+                        "uniq_val_prop": '',
+                        "unfair_advng": '',
+                        "channels": '',
+                        "customer_seg": '',
+                        "cost_struct": '',
+                        "rev_streams": ''
                     }
                 ]
             }
@@ -87,16 +83,25 @@ def create_user(db, userID, pwd):
 
             # Check if insertion was successful
             if result.inserted_id:
-                st.success("User created successfully.")
                 return True
             else:
-                st.error("Error creating user.")
                 return False
 
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return False
 
+def authenticate_user(db, userID, pwd):
+    userID_hash = hl.sha256(userID.encode('utf-8')).hexdigest()
+    pwd_hash = hl.sha256(pwd.encode('utf-8')).hexdigest()
+    
+    users_collection = db["users"]
+    cur_user = users_collection.find_one({"userID_hash": userID_hash})
+    
+    if (cur_user is None) | (cur_user.get("pwd_hash") != pwd_hash):
+        return False
+    
+    return True
 
 
 
