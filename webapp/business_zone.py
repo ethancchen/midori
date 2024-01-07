@@ -8,12 +8,10 @@ def page_business_zone():
     st.title("Business Zone Page")
     st.write("Lean Canvas Generated here")
 
-    # img = d.draw()
-    # st.image(img, caption='Uploaded Image.', use_column_width=True)
+    st.write(st.session_state["choice"])
 
     lean_row = st.session_state['lean_row'] 
 
-    # st.write (lean_row)
 
     prob = lean_row['Problem ']
     sol = lean_row['Solution']
@@ -21,7 +19,11 @@ def page_business_zone():
     # st.write(prob)
     # st.write(sol)
 
-    input_string = "Problem : " + prob + "/n" + "Solution : " + sol
+    input_string = "Problem : " + prob + "\n" + "Solution : " + sol
+
+    # st.write(input_string)
+
+
 
     problem_summary,solution_summary, uniq_val_prop, key_metrics, unfair_advtg, channels, customer_seg,cost_struct, revenue_streams = lac.get_data(input_string)
     
