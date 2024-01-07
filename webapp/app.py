@@ -3,7 +3,6 @@
 import streamlit as st
 import pandas as pd
 import get_started as gs
-# import get_started_prev as gs
 
 
 def page_welcome():
