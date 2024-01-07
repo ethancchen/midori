@@ -9,7 +9,7 @@ def change_page():
 def handle_button_press_to_business_zone():
 
     if st.session_state['choice'] is not None:
-        st.success(f"You entered: {st.session_state['choice']}")
+        # st.success(f"You entered: {st.session_state['choice']}")
         change_page()
 
     else:
