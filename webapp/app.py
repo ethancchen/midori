@@ -29,7 +29,7 @@ def main():
 
     if 'authenticated' not in st.session_state:
 
-        # Change it to false before deployment
+        # TODO: Change it to false before deployment
         st.session_state["authenticated"] = True
 
     # Check if user is authenticated
@@ -52,24 +52,35 @@ def main():
                 st.error(error_message)
     else:
         # Clear the login elements
-        st.empty()
-
-        
+        if 'menu_selection' not in st.session_state:
+            st.session_state['menu_selection'] = 'Welcome'  # Default page
+            st.experimental_rerun()
 
         st.sidebar.title("Navigation")
         pages = ["Welcome", "Get started", "Evaluator", "Business Zone", "About"]
-        selected_page = st.sidebar.radio(" ", pages)
 
-        if selected_page == "Welcome":
-            page_welcome()
-        elif selected_page == "Get started":
-            page_get_started()
-        elif selected_page == "Evaluator":
-            page_evaluator()
-        elif selected_page == "Business Zone":
-            page_business_zone()
-        elif selected_page == "About":
-            page_about()
+        # Updating the menu selection and rerunning the script if the selection changes
+        current_selection = st.session_state["menu_selection"]
+        new_selection = st.sidebar.radio("Choose a page", pages, index=pages.index(current_selection))
+        if new_selection != current_selection:
+            st.session_state['menu_selection'] = new_selection
+            st.experimental_rerun()
+
+        # Load the selected page
+        match st.session_state['menu_selection']:
+            case "Welcome":
+                page_welcome()
+            case "Get started":
+                page_get_started()
+            case "Evaluator":
+                page_evaluator()
+            case "Business Zone":
+                page_business_zone()
+            case "About":
+                page_about()
+            case _:
+                st.write("Page not found")
+
 
 if __name__ == "__main__":
     main()
