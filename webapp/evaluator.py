@@ -18,6 +18,8 @@ def handle_button_press_to_business_zone():
 
 def page_evaluator():
     st.title("Evaluator Page")
+    if 'problem' not in st.session_state:
+        return
     
     prob = st.session_state['problem']
     sol = st.session_state['solution']
@@ -25,7 +27,6 @@ def page_evaluator():
     # st.write(prob)
     # st.write(sol)
 
-    
     # Proceed with the if-else loop based on session state type
     if st.session_state['type'] == "manual":
         input_string = "Problem : " + prob + "\n" + "Solution : " + sol

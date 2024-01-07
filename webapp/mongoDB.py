@@ -53,22 +53,41 @@ def create_user(db, userID_hash, pwd_hash):
             new_user = {
                 "userID_hash": userID_hash,
                 "pwd_hash": pwd_hash,
-                "data": [
-                    {
-                        "problem_submitted": '',
-                        "solution_submitted": '',
-                        "score": -1,
-                        "lean_problem": '',
-                        "lean_solution": '',
-                        "key_metrics": '',
-                        "uniq_val_prop": '',
-                        "unfair_advng": '',
-                        "channels": '',
-                        "customer_seg": '',
-                        "cost_struct": '',
-                        "rev_streams": ''
-                    }
-                ]
+                "data_valid": 0, # 1 is true, 0 is false, -1 is NULL.
+                "processed_data": 
+                    [
+                        {
+                            "problem_submitted": '',
+                            "solution_submitted": '',
+                            "score": -1,
+                            "lean_problem": '',
+                            "lean_solution": '',
+                            "key_metrics": '',
+                            "uniq_val_prop": '',
+                            "unfair_advng": '',
+                            "channels": '',
+                            "customer_seg": '',
+                            "cost_struct": '',
+                            "rev_streams": ''
+                        }
+                    ],
+                "raw_data":
+                    [
+                        {
+                            "problem": '',
+                            "solution": '',
+                            "rank" : -1,
+                            "scores": -1,
+                            "industry": '',
+                            "ten_R": '',
+                            "area_focus": '',
+                            "applicable": -1, # 1 is true, 0 is false, -1 is NULL.
+                            "heavy_investment": -1, # 1 is true, 0 is false, -1 is NULL.
+                            "monetary_benefits": -1, # 1 is true, 0 is false, -1 is NULL.
+                            "scalable": -1, # 1 is true, 0 is false, -1 is NULL.
+                            "relevance": -1 # 1 is true, 0 is false, -1 is NULL.
+                        }
+                    ]
             }
 
             # Insert the new user into the database
@@ -93,5 +112,30 @@ def authenticate_user(db, userID_hash, pwd_hash):
     
     return True
 
-
+# Assume new_raw_df has problem, solution...
+# Assume
+def raw_data_replacement(db, userID_hash, new_raw_df):
+    # Iterate through the raw data DataFrame and update MongoDB documents
+    for _, row in new_raw_df.iterrows():
+        user_id = row["userID_hash"]
+        raw_data = {
+            "problem": row.get("problem", ''),
+            "solution": row.get("solution", ''),
+            "rank": row.get("rank", -1),
+            "scores": row.get("scores", -1),
+            "industry": row.get("industry", ''),
+            "ten_R": row.get("ten_R", ''),
+            "area_focus": row.get("area_focus", ''),
+            "applicable": row.get("applicable", -1),
+            "heavy_investment": row.get("heavy_investment", -1),
+            "monetary_benefits": row.get("monetary_benefits", -1),
+            "scalable": row.get("scalable", -1),
+            "relevance": row.get("relevance", -1)
+        }
+        
+        # Reset 
+        db.users.update_one({"userID_hash": userID_hash}, 
+                            {"$set": {"raw_data": raw_data}}, 
+                            {"$set": {"process_data": None}})
+    
 
