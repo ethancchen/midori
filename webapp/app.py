@@ -21,7 +21,7 @@ def page_business_zone():
     st.write("Lean Canvas Generated here")
 
 def page_about():
-    st.title("Meet the authors")
+    st.title("Meet the Team")
 
 def main():
     correct_username = "user"

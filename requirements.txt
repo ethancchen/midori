@@ -235,7 +235,9 @@ parso==0.8.3
 pexpect==4.9.0
     # via ipython
 pillow==10.2.0
-    # via streamlit
+    # via
+    #   -r requirements.in
+    #   streamlit
 platformdirs==4.1.0
     # via jupyter-core
 prometheus-client==0.19.0
