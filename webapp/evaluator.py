@@ -39,6 +39,11 @@ def page_evaluator():
         st.write(df.head())
         ac.get_data(df)
 
+
+
+
+
+    
     st.button("Next", on_click=handle_button_press_to_business_zone)
 
 # def page_evaluator():
