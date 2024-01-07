@@ -71,7 +71,7 @@ def main():
         st.session_state["type"] = None
 
     if 'authenticated' not in st.session_state:
-        st.session_state["authenticated"] = False # reset to False
+        st.session_state["authenticated"] = True # reset to False
         
     if 'session_initialized' not in st.session_state:
         st.session_state['current_user'] = None

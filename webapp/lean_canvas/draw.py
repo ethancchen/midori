@@ -1,12 +1,11 @@
 from PIL import Image, ImageDraw, ImageFont
-from pathlib import PurePath as pp
-import textwrap
 import os
+from pathlib import PurePath as pp
 import streamlit as st
 
 
 
-def draw(): 
+def draw(problem_summary,solution_summary, uniq_val_prop, key_metrics, unfair_advtg, channels, customer_seg,cost_struct, revenue_streams): 
     # get the current working directory
     # current_working_directory = os.getcwd()
     # # print output to the console
@@ -15,15 +14,14 @@ def draw():
 
     # Load the image
     # image_template_path = './images/lean_canvas_template.png'  # Update to the path of your Lean Canvas image
-    image_template_path = pp('images/lean_canvas_template.png')
 
+    image_template_path = pp('images/lean_canvas_template.png')
     image_template = Image.open(image_template_path.as_posix())
     draw = ImageDraw.Draw(image_template)
 
     # Choose a font and size
     # font_path = 'fonts/Montserrat-Black.otf'  # Update to the path of a font file
     font_path = pp('fonts/Montserrat-Black.otf')
-
     font_size = 18
     font = ImageFont.truetype(font_path.as_posix(), font_size)
 
@@ -57,28 +55,17 @@ def draw():
         "Revenue Streams": (vert_left_x4, horiz_top_y3, vert_left_x6 + small_box_width, horiz_bottom_y3),
     }
 
-    filler_text = """
-    Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-    when an unknown printer took a galley of type and scrambled it to make a type 
-    specimen book. It has survived not only five centuries, but also the leap into 
-    electronic typesetting, remaining essentially unchanged. It was popularised in 
-    the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, 
-    and more recently with desktop publishing software like Aldus PageMaker including 
-    versions of Lorem Ipsum.
-    """ * 2
-
     # Define the text content for each box
     box_texts = {
-        "Problem": f"Describe the problem ... {filler_text}",
-        "Solution": f"Describe the solution ... {filler_text}",
-        "Key Metrics": f"Describe the key metrics ... {filler_text}",
-        "Unique Value Proposition": f"Describe the unique value proposition ... {filler_text}",
-        "Unfair Advantage": f"Describe the unfair advantage ... {filler_text}",
-        "Channels": f"Describe the channels ... {filler_text}",
-        "Customer Segments": f"Describe the Customer Segments ... {filler_text}",
-        "Cost Structure": f"Describe the Cost Structure ... {filler_text}",
-        "Revenue Streams": f"Describe the Revenue Streams ... {filler_text}",
+        "Problem": problem_summary,
+        "Solution": solution_summary,
+        "Key Metrics": key_metrics,
+        "Unique Value Proposition": uniq_val_prop,
+        "Unfair Advantage": unfair_advtg,
+        "Channels": channels,
+        "Customer Segments": customer_seg,
+        "Cost Structure": cost_struct,
+        "Revenue Streams": revenue_streams,
     }
 
     # Function to wrap and position text within a box
@@ -133,4 +120,4 @@ def draw():
 
 
 
-img = draw()
+# img = draw()
