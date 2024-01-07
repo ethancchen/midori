@@ -9,17 +9,15 @@ def change_page():
 def handle_button_press_to_business_zone():
 
     if st.session_state['choice'] is not None:
-        # st.success(f"You entered: {choice}")
-        # handle_button_press_to_business_zone()
+        st.success(f"You entered: {st.session_state['choice']}")
         change_page()
 
     else:
         st.warning("Please enter a value before clicking 'Next'.")
-    # st.session_state["menu_selection"] = "Business Zone"
+    
 
 def page_choose_idea():
     st.write("Page Choose Idea")
-
 
     org_df = st.session_state["org_df"]
     ans_df = st.session_state['ans_df']
@@ -37,28 +35,22 @@ def page_choose_idea():
         st.session_state['merged_df'] = merged_df
 
     st.write(merged_df)
-    choice = st.number_input("Enter your choice here")
-
+    
     if 'choice' not in st.session_state:
-        st.session_state['choice'] = choice
-
-
-    row_by_index = merged_df.iloc[int(choice)]
-    # st.write(row_by_index)
-
+        st.session_state['choice'] = 0
 
     if 'lean_row' not in st.session_state:
-        st.session_state['lean_row'] = row_by_index
-
-    # # Add a button
-    # if st.button("Next"):
-    #     st.success(f"You entered: {choice}")
+        st.session_state['lean_row'] = None
+    
+    choice = st.number_input("Enter an integer:", min_value=None, max_value=None, value=0, step=1, format="%d")
+ 
+    row_by_index = merged_df.iloc[int(choice)]
 
     
-    # st.button("Next", on_click=handle_button_press_to_business_zone)
+    st.session_state['choice'] = choice
+    st.session_state['lean_row'] = row_by_index
 
-       # Next button to proceed to the evaluation page
-    st.button("Next", on_click=handle_button_press_to_business_zone())
+    st.button("Next", on_click=handle_button_press_to_business_zone)
         
     
 
