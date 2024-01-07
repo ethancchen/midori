@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import get_started as gs
+import mongoDB as mg
 
 
 def page_welcome():
@@ -82,11 +83,13 @@ def page_about():
 def main():
     correct_username = "user"
     correct_password = "password"
-
+    
+    db = mg.db_init()
+    
     if 'authenticated' not in st.session_state:
 
         # TODO: Change it to false before deployment
-        st.session_state["authenticated"] = True
+        st.session_state["authenticated"] = False
 
     # Check if user is authenticated
     if not st.session_state['authenticated']:
@@ -105,6 +108,12 @@ def main():
                 st.session_state['authenticated'] = True
             else:
                 error_message = "Incorrect username or password"
+                st.error(error_message)
+        if st.button("Create User"):
+            if mg.create_user(db, username, password):
+                st.success("Creation Successful. Proceed to login.")
+            else:
+                error_message = "Try another username."
                 st.error(error_message)
     else:
         # Clear the login elements
