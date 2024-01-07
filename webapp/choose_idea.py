@@ -20,13 +20,10 @@ def handle_button_press_to_business_zone():
 def page_choose_idea():
     st.write("Page Choose Idea")
 
+    org_df = st.session_state["org_df"] # original raw data frame
+    ans_df = st.session_state['ans_df'] # gpt answer 
 
-    org_df = st.session_state["org_df"]
-    ans_df = st.session_state['ans_df']
-
-    ranked_df = st.session_state["ranked_df"]
-
-    merged_df = pd.concat([org_df, ans_df], axis=1)
+    merged_df = pd.concat([org_df, ans_df], axis=1) # original problem solution + gpt answer + score
 
     #rank pairs
     x = 0.25 # filter to get only top x% of ranks

@@ -23,10 +23,7 @@ def page_evaluator():
     
     prob = st.session_state['problem']
     sol = st.session_state['solution']
-
-    # st.write(prob)
-    # st.write(sol)
-
+    
     # Proceed with the if-else loop based on session state type
     if st.session_state['type'] == "manual":
         input_string = "Problem : " + prob + "\n" + "Solution : " + sol
@@ -39,13 +36,9 @@ def page_evaluator():
         df = pd.read_csv(uploaded_file)
         st.write(df.head())
         ac.get_data(df)
-
-
-
-
-
     
     st.button("Next", on_click=handle_button_press_to_business_zone)
+    
 
 # def page_evaluator():
 #     st.title("Evaluator Page")
