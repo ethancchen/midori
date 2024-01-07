@@ -12,35 +12,33 @@ font_size = 18
 font = ImageFont.truetype(font_path, font_size)
 
 # Define the coordinates for each box on the Lean Canvas (left, top, right, bottom)
+small_box_height = 300
+small_box_width = 245
+large_box_width = 670
+box_height_dist1 = 360
+
 horiz_top_y1 = 40
-horiz_bottom_y1 = 340
-horiz_top_y2 = 400
+horiz_top_y2 = horiz_top_y1 + box_height_dist1
 horiz_bottom_y2 = 700
 horiz_top_y3 = 760
 horiz_bottom_y3 = 1000
-vert_left_x1 = 14
-vert_right_x1 = 260
+vert_left_x1 = 15
 vert_left_x2 = 290
-vert_right_x2 = 540
 vert_left_x3 = 570
-vert_right_x3 = 680
 vert_left_x4 = 710
-vert_right_x4 = 820
 vert_left_x5 = 850
-vert_right_x5 = 1100
 vert_left_x6 = 1130
-vert_right_x6 = 1380
 
 box_coords = {
-    "Problem": (vert_left_x1, horiz_top_y1, vert_right_x1, horiz_bottom_y2),
-    "Solution": (vert_left_x2, horiz_top_y1, vert_right_x2, horiz_bottom_y1),
-    "Key Metrics": (vert_left_x2, horiz_top_y2, vert_right_x2, horiz_bottom_y2),
-    "Unique Value Proposition": (vert_left_x3, horiz_top_y1, vert_right_x4, horiz_bottom_y2),
-    "Unfair Advantage": (vert_left_x5, horiz_top_y1, vert_right_x5, horiz_bottom_y1),
-    "Channels": (vert_left_x5, horiz_top_y2, vert_right_x5, horiz_bottom_y2),
-    "Customer Segments": (vert_left_x6, horiz_top_y1, vert_right_x6, horiz_bottom_y2),
-    "Cost Structure": (vert_left_x1, horiz_top_y3, vert_right_x3, horiz_bottom_y3),
-    "Revenue Streams": (vert_left_x4, horiz_top_y3, vert_right_x6, horiz_bottom_y3),
+    "Problem": (vert_left_x1, horiz_top_y1, vert_left_x1 + small_box_width, horiz_bottom_y2),
+    "Solution": (vert_left_x2, horiz_top_y1, vert_left_x2 + small_box_width, horiz_top_y1 + small_box_height),
+    "Key Metrics": (vert_left_x2, horiz_top_y2, vert_left_x2 + small_box_width, horiz_bottom_y2),
+    "Unique Value Proposition": (vert_left_x3, horiz_top_y1, vert_left_x3 + small_box_width, horiz_bottom_y2),
+    "Unfair Advantage": (vert_left_x5, horiz_top_y1, vert_left_x5 + small_box_width, horiz_top_y1 + small_box_height),
+    "Channels": (vert_left_x5, horiz_top_y2, vert_left_x5 + small_box_width, horiz_bottom_y2),
+    "Customer Segments": (vert_left_x6, horiz_top_y1, vert_left_x6 + small_box_width, horiz_bottom_y2),
+    "Cost Structure": (vert_left_x1, horiz_top_y3, vert_left_x1 + large_box_width, horiz_bottom_y3),
+    "Revenue Streams": (vert_left_x4, horiz_top_y3, vert_left_x6 + small_box_width, horiz_bottom_y3),
 }
 
 filler_text = """
