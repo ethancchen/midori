@@ -39,14 +39,7 @@ def db_init():
 # Create an user based on USERID and PASSWORD, both of which would be passed in as plain-texts.
 # Check if USERID exists in USERS database. Reject creation request if fulfilling such intent would result in
 # duplicate USERID in the database. Returns TRUE if successful, FALSE otherwise.
-def create_user(db, userID, pwd):
-    if not userID or not pwd:
-        st.error("User ID or password cannot be empty.")
-        return False
-    
-    userID_hash = hl.sha256(userID.encode('utf-8')).hexdigest()
-    pwd_hash = hl.sha256(pwd.encode('utf-8')).hexdigest()
-    
+def create_user(db, userID_hash, pwd_hash):
     try:
         # Check if USERID already exists
         users_collection = db["users"]
@@ -91,14 +84,11 @@ def create_user(db, userID, pwd):
         st.error(f"An error occurred: {e}")
         return False
 
-def authenticate_user(db, userID, pwd):
-    userID_hash = hl.sha256(userID.encode('utf-8')).hexdigest()
-    pwd_hash = hl.sha256(pwd.encode('utf-8')).hexdigest()
-    
+def authenticate_user(db, userID_hash, pwd_hash):
     users_collection = db["users"]
     cur_user = users_collection.find_one({"userID_hash": userID_hash})
     
-    if (cur_user is None) | (cur_user.get("pwd_hash") != pwd_hash):
+    if (cur_user is None) or (cur_user.get("pwd_hash") != pwd_hash):
         return False
     
     return True

@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import get_started as gs
 import mongoDB as mg
-
+import hashlib as hl
 
 def page_welcome():
     st.markdown("<h1 style='text-align: left; color: #808000;'>MIDORI</h1>", unsafe_allow_html=True)
@@ -83,8 +83,8 @@ def page_about():
 def handle_user_change():
     st.session_state["authenticated"] = False
     
-def handle_login(db, username, password):
-    if mg.authenticate_user(db, username, password):
+def handle_login(db, username_hash, password_hash, username):
+    if mg.authenticate_user(db, username_hash, password_hash):
         st.success("Logged in as {}".format(username))
         st.session_state['authenticated'] = True
     else:
@@ -119,11 +119,14 @@ def main():
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
         
+        userID_hash = hl.sha256(username.encode('utf-8')).hexdigest()
+        pwd_hash = hl.sha256(password.encode('utf-8')).hexdigest()
+        
         # Check for login.
-        st.button("Login", on_click=handle_login, args=[db, username, password])
+        st.button("Login", on_click=handle_login, args=[db, userID_hash, pwd_hash, username])
             
         # Create a new user if permitted.
-        st.button("Create User", on_click=handle_user_creation, args=[db, username, password])
+        st.button("Create User", on_click=handle_user_creation, args=[db, userID_hash, pwd_hash])
     else:
         # Clear the login elements
         if 'menu_selection' not in st.session_state:
