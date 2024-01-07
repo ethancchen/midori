@@ -79,14 +79,34 @@ def page_business_zone():
 
 def page_about():
     st.title("Meet the Team")
+    
+def handle_user_change():
+    st.session_state["authenticated"] = False
+    
+def handle_login(db, username, password):
+    if mg.authenticate_user(db, username, password):
+        st.success("Logged in as {}".format(username))
+        st.session_state['authenticated'] = True
+    else:
+        error_message = "Incorrect username or password"
+        st.error(error_message)
+    
+def handle_user_creation(db, username, password):
+    if mg.create_user(db, username, password):
+        st.success("Creation Successful. Proceed to login.")
+    else:
+        error_message = "Try another username."
+        st.error(error_message)
+    
+def page_change_user():
+    st.button("Change User", on_click=handle_user_change)
+    st.write("Once you click on the button above. You will be redirected to a new login page.")
 
 def main():
     # Initialize mongDB.
     db = mg.db_init()
     
     if 'authenticated' not in st.session_state:
-
-        # TODO: Change it to false before deployment
         st.session_state["authenticated"] = False
 
     # Check if user is authenticated
@@ -98,22 +118,12 @@ def main():
 
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
-
-        # Check for login
-        if st.button("Login"):
-            if mg.authenticate_user(db, username, password):
-                st.success("Logged in as {}".format(username))
-                st.session_state['authenticated'] = True
-            else:
-                error_message = "Incorrect username or password"
-                st.error(error_message)
-    
-        if st.button("Create User"):
-            if mg.create_user(db, username, password):
-                st.success("Creation Successful. Proceed to login.")
-            else:
-                error_message = "Try another username."
-                st.error(error_message)
+        
+        # Check for login.
+        st.button("Login", on_click=handle_login, args=[db, username, password])
+            
+        # Create a new user if permitted.
+        st.button("Create User", on_click=handle_user_creation, args=[db, username, password])
     else:
         # Clear the login elements
         if 'menu_selection' not in st.session_state:
@@ -121,7 +131,7 @@ def main():
             st.experimental_rerun()
 
         st.sidebar.title("Navigation")
-        pages = ["Welcome", "Get started", "Evaluator", "Business Zone", "About"]
+        pages = ["Welcome", "Get started", "Evaluator", "Business Zone", "About", "Change User"]
 
         # Updating the menu selection and rerunning the script if the selection changes
         current_selection = st.session_state["menu_selection"]
@@ -142,6 +152,8 @@ def main():
                 page_business_zone()
             case "About":
                 page_about()
+            case "Change User":
+                page_change_user()
             case _:
                 st.write("Page not found")
 
