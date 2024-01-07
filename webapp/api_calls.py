@@ -190,7 +190,3 @@ def get_data(df):
 
     if 'ranked_df' not in st.session_state:
         st.session_state['ranked_df'] = df_numeric
-
-
-
-    

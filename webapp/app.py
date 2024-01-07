@@ -17,68 +17,9 @@ def page_welcome():
 def page_get_started():
     gs.get_started_page()
 
-def handle_rank_button(top_x_to_rank: int):
-    def calculate_scores(llm_response: pd.Series, feature_weights: list) -> float:
-        curr_score = 0
-        if llm_response["relevance"] == True:
-            # for now, exclude industry, ten_R, and area_focus
-            for fw in feature_weights:
-                curr_score += llm_response[fw] * feature_weights[fw]
-        return curr_score
-    value_mapping = {"Yes": 1, "No": -1, "Not Known": 0}
-    df = st.session_state["df"]
-    df_numeric = df.replace(value_mapping)
-    feature_weights = {"applicable": 0.2, 
-                       "heavy_investment": 0.2,
-                       "monetary_benefits": 0.2,
-                       "scalable": 0.2,
-                       "payback_period": 0.2}
-    assert(sum(feature_weights.values()) == 1)
-
-    df_numeric.insert(loc = 0, column = 'scores', value = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1))
-
-    # do not assert(x_prop) b/c the user can see this
-    n = len(df_numeric)
-    num_top_pairs = int(top_x_to_rank/100 * n)
-    st.write(num_top_pairs)
-
-    if (1/n * 100 < top_x_to_rank <= 100):
-        st.write(f"Choosing the highest **{top_x_to_rank:.2f}**%, or **{num_top_pairs}**, of all problem : solution pairs ranked by weighted scores.")
-
-        df_rank_filtered = df_numeric.sort_values(by="scores", ascending=False).iloc[:num_top_pairs]
-        # TODO: how do we break ties? What if there aren't that many unique score values?
-        df_rank_filtered.index = np.arange(1, len(df_rank_filtered) + 1)
-        st.write(df_rank_filtered)
-    else:
-        st.write(f"Please choose a valid proportion between {int(1/n * 100)} and 100% of pairs to select.")
-
-    # TODO: Add option to see and/or download full ranked, sorted, and unfiltered dataset.
-
 def page_evaluator():
     st.title("Evaluator Page")
-
-    df = pd.read_csv("../csv/random_response_data_frame.csv")
-    df["relevance"] = np.random.rand(len(df)) < 0.7  # temporary
-    st.session_state["df"] = df
-
-    # allow option for integer (vs. just %) number of pairs
-    top_x_to_rank = st.number_input(label = "% of desired top scores to rank and filter",
-                                    min_value = 1.0/len(df) * 100,
-                                    max_value = 100.0,
-                                    value = 10.0,
-                                    step = 0.01,
-                                    )
-
-    handle_rank_button(top_x_to_rank)
-
-    st.button("Update database with these scores")
-
-    # No button for now b/c we change dynamically based on input
-    # st.button(f"Rank top {st.session_state['top_x_to_rank']}% of scores", on_click=handle_rank_button)
-
-    #ev.page_evaluator()
-    # st.title("Evaluator Page")
-    # st.write("Calculate scores here")
+    ev.page_evaluator()
 
 def page_choose_idea():
     st.title("Pick the idea you wish to create a business model of")
@@ -123,6 +64,9 @@ def page_change_user():
 def main():
     # Initialize mongDB.
     db = mg.db_init()
+
+    if 'api_key' not in st.session_state:
+        st.session_state["api_key"]= "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"
     
     if 'authenticated' not in st.session_state:
         st.session_state["authenticated"] = False

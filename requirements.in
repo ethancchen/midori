@@ -2,4 +2,5 @@ jupyter
 pandas
 openai
 streamlit
+streamlit_authenticator
 Pillow
