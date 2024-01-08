@@ -65,7 +65,7 @@ def main():
     db = mg.db_init()
 
     if 'api_key' not in st.session_state:
-        st.session_state["api_key"]= "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"
+        st.session_state["api_key"]= "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"
     
     if 'type' not in st.session_state:
         st.session_state["type"] = None
@@ -100,7 +100,7 @@ def main():
         # Clear the login elements
         if 'menu_selection' not in st.session_state:
             st.session_state['menu_selection'] = 'Welcome'  # Default page
-            st.experimental_rerun()
+            st.rerun()
 
         st.sidebar.title("Navigation")
         pages = ["Welcome", "Get started", "Evaluator", "Choose Idea", "Business Zone", "About", "Change User"]
@@ -110,7 +110,7 @@ def main():
         new_selection = st.sidebar.radio("Choose a page", pages, index=pages.index(current_selection))
         if new_selection != current_selection:
             st.session_state['menu_selection'] = new_selection
-            st.experimental_rerun()
+            st.rerun()
 
         # Load the selected page
         match st.session_state['menu_selection']:

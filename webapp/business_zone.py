@@ -13,8 +13,8 @@ def page_business_zone():
     lean_row = st.session_state['lean_row'] 
 
 
-    prob = lean_row['Problem']
-    sol = lean_row['Solution']
+    prob = lean_row['problem']
+    sol = lean_row['solution']
 
     # st.write(prob)
     # st.write(sol)

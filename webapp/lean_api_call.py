@@ -5,7 +5,7 @@ import json
 
 def get_completion(prompt, engine = 'text-davinci-003'):
     client = OpenAI()
-    OpenAI.api_key = "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"
+    # OpenAI.api_key = "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"
     print(OpenAI.api_key)
     response = client.completions.create(
         model = engine,

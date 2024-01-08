@@ -14,8 +14,9 @@ def calculate_scores(llm_response: pd.Series, feature_weights: list) -> float:
     return curr_score
 
 def get_completion(prompt, engine = 'text-davinci-003'):
-    response = openai.Completion.create(
-        engine = engine,
+    client = openai.OpenAI()
+    response = client.completions.create(
+        model = engine,
         prompt = prompt,
         max_tokens = 2500,
         n = 1  
@@ -53,7 +54,7 @@ def generate_ans(text):
     # # Not Known
     # # Yes
     # # Not Known"""
-    # ans = get_completion(prompt)
+    ans = get_completion(prompt)
 
     # st.write(ans)
 
@@ -61,33 +62,34 @@ def generate_ans(text):
     # # lines = ans.splitlines()
     # # lines = [x.strip() for x in ans.splitlines()]
 
-    # lines = ans.split(';')
+    lines = ans.split(';')
+    lines = [x.strip() for x in lines]
     
     # # Create a DataFrame with a single row and multiple columns
-    # df = pd.DataFrame([lines], columns=["relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"])
+    df = pd.DataFrame([lines], columns=["relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"])
 
     # # Print the DataFrame
     # st.write(df.head())
 
     # df = pd.read_csv("C:/Users/patil/Desktop/AIEarth/gpt_output.csv")
 
-    data = [["      Yes ", "Apparel", "Reuse", "Waste reduction", "Not Known", "Not Known", "Yes", "Yes", "Not Known"]]
-    columns = ["relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"]
+    # data = [["      Yes ", "Apparel", "Reuse", "Waste reduction", "Not Known", "Not Known", "Yes", "Yes", "Not Known"]]
+    # columns = ["relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"]
 
-    df = pd.DataFrame(data, columns=columns)
+    # df = pd.DataFrame(data, columns=columns)
 
     return df
 
 
 def generate_ans_df(df):
     # st.write(df.head())
-    ans_df = pd.DataFrame(columns=["relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"])
+    ans_df = pd.DataFrame(columns=["scores", "relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"])
 
     # st.write(ans_df.head())
 
     for index, row in df.iterrows():
-        problem_value = row['Problem']
-        solution_value = row['Solution']
+        problem_value = str(row['problem'])
+        solution_value = str(row['solution'])
 
         input_string = "Problem : " + problem_value + "\n" + "Solution : " + solution_value
 
@@ -114,7 +116,7 @@ def get_data_single(input_string):
 
     df["relevance"] = df["relevance"].str.strip()
 
-    value_mapping = {"Yes": 1, "No": -1, "Not Known": 0}
+    value_mapping = {"yes": 1, "no": -1, "not known": 0}
     df_numeric = df.replace(value_mapping)
 
     feature_weights = {"applicable": 0.2, 
@@ -128,7 +130,6 @@ def get_data_single(input_string):
 
     st.write("**Resulting data from prompting Generative AI.**")
     st.write(df_numeric.head())
-    
 
     #rank pairs
     # x = 0.25 # filter to get only top x% of ranks
@@ -137,19 +138,19 @@ def get_data_single(input_string):
 
 
 def handle_rank_button(top_x_to_rank: int):
-    value_mapping = {"Yes": 1, "No": -1, "Not Known": 0}
-    df = st.session_state["ans_df"]
-    df_numeric = df.replace(value_mapping)
-    feature_weights = {"applicable": 0.2,
-                       "heavy_investment": 0.2,
-                       "monetary_benefits": 0.2,
-                       "scalable": 0.2,
-                       "payback_period": 0.2}
-    assert(sum(feature_weights.values()) == 1)
-
+    # value_mapping = {"yes": 1, "no": -1, "Not Known": 0}
+    # df = st.session_state["ans_df"]
+    # df_numeric = df.replace(value_mapping)
+    # feature_weights = {"applicable": 0.2,
+    #                    "heavy_investment": 0.2,
+    #                    "monetary_benefits": 0.2,
+    #                    "scalable": 0.2,
+    #                    "payback_period": 0.2}
+    # assert(sum(feature_weights.values()) == 1)
     # df_numeric.insert(loc = 0, column = 'scores', value = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1))
 
     # do not assert(x_prop) b/c the user can see this
+    df_numeric = st.session_state["ans_df"]
     n = len(df_numeric)
     num_top_pairs = int(top_x_to_rank/100 * n)
     st.write(num_top_pairs)
@@ -174,13 +175,14 @@ def get_data(df):
         st.session_state['org_df'] = df
 
     # st.write(input_string)
+    if "has_generated_ans_df" not in st.session_state:
+        st.session_state["has_generated_ans_df"] = True
+        df = generate_ans_df(df)
 
-    df = generate_ans_df(df)
+        # st.write("**Resulting data from prompting Generative AI.**")
+        st.write(df)
 
-    st.write("**Resulting data from prompting Generative AI.**")
-    st.write(df)
-
-    df["relevance"] = df["relevance"].str.strip()
+        df["relevance"] = df["relevance"].str.strip()
 
     value_mapping = {"Yes": 1, "yes":1, "no": -1, "No": -1, "Not Known": 0}
     df_numeric = df.replace(value_mapping)
@@ -191,21 +193,21 @@ def get_data(df):
                     "payback_period": 0.2}
     assert(sum(feature_weights.values()) == 1)
 
-    df_numeric["scores"] = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1)
+        # df_numeric.insert(loc = 0, column = 'scores', value = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1))
+    df_numeric.insert(["scores"] = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1)
 
-    # st.write("Converted scores")
-    # st.write(df_numeric.head())
+    # # st.write("Converted scores")
+    # # st.write(df_numeric.head())
 
-    if 'ans_df' not in st.session_state:
-        st.session_state['ans_df'] = df_numeric
+    st.session_state['ans_df'] = df 
 
     # rank pairs
 
     # allow option for integer (vs. just %) number of pairs
     top_x_to_rank = st.number_input(label = "Percentage of desired top scores to rank and filter",
-                                    min_value = 1.0/len(df_numeric) * 100,
+                                    min_value = 1.0/len(df) * 100,
                                     max_value = 100.0,
-                                    value = 1.0/len(df_numeric) * 100,
+                                    value = 1.0/len(df) * 100,
                                     step = 0.01,
                                     )
 
