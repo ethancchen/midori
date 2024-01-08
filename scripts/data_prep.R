@@ -2,8 +2,7 @@
 library(tidyverse)
 library(stringr)
 
-setwd("midori")
-# Read the CSV file with explicit encoding specification
+# Read the CSV file with explicit encoding specisfication
 file_path <- "csv/AI EarthHack Dataset.csv"
 init_data <- read.csv(file_path, stringsAsFactors = FALSE, fileEncoding = "UTF-8")
 
@@ -13,13 +12,13 @@ result_data <- init_data %>%
          res_sent_cnt = sapply(str_extract_all(solution, "[^.!?]+[.!?]"), length),
          r_char_cnt = sapply(solution, nchar),
          p_char_cnt = sapply(problem, nchar)) %>%
-  filter((res_sent_cnt > 10 | r_char_cnt >= 250) & p_char_cnt > 42) 
-  #select(c(problem, id, solution)) 
-
-result_data |> max(result_data$r_char_cnt)
-  
-
-view(result_data)
+  filter((res_sent_cnt > 10 | r_char_cnt >= 250) & p_char_cnt > 42) |> 
+  select(c(problem, solution)) 
+# 
+# result_data |> max(result_data$r_cshar_cnt)
+#   
+# 
+# view(result_data)
 
 # Write the processed data to a new CSV file.
 write.csv(result_data, "clean_data.csv", row.names = FALSE)
