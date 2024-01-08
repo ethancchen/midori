@@ -55,6 +55,7 @@ def generate_ans(text):
     # # Yes
     # # Not Known"""
     ans = get_completion(prompt)
+    st.write(ans)
 
     # st.write(ans)
 
@@ -83,7 +84,7 @@ def generate_ans(text):
 
 def generate_ans_df(df):
     # st.write(df.head())
-    ans_df = pd.DataFrame(columns=["scores", "relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"])
+    ans_df = pd.DataFrame(columns=["relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"])
 
     # st.write(ans_df.head())
 
@@ -184,22 +185,22 @@ def get_data(df):
 
         df["relevance"] = df["relevance"].str.strip()
 
-    value_mapping = {"Yes": 1, "yes":1, "no": -1, "No": -1, "Not Known": 0}
-    df_numeric = df.replace(value_mapping)
-    feature_weights = {"applicable": 0.2, 
-                    "heavy_investment": 0.2,
-                    "monetary_benefits": 0.2,
-                    "scalable": 0.2,
-                    "payback_period": 0.2}
-    assert(sum(feature_weights.values()) == 1)
+        value_mapping = {"Yes": 1, "yes": 1, "no": -1, "No": -1, "Not Known": 0}
+        df_numeric = df.replace(value_mapping)
+        feature_weights = {"applicable": 0.2, 
+                        "heavy_investment": 0.2,
+                        "monetary_benefits": 0.2,
+                        "scalable": 0.2,
+                        "payback_period": 0.2}
+        assert(sum(feature_weights.values()) == 1)
 
+        df_numeric["scores"] = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1)   
         # df_numeric.insert(loc = 0, column = 'scores', value = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1))
-    df_numeric.insert(["scores"] = df_numeric.apply(lambda row: calculate_scores(row, feature_weights), axis = 1)
 
     # # st.write("Converted scores")
     # # st.write(df_numeric.head())
 
-    st.session_state['ans_df'] = df 
+        st.session_state['ans_df'] = df_numeric
 
     # rank pairs
 
