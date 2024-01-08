@@ -31,6 +31,8 @@ attrs==23.2.0
     #   referencing
 babel==2.14.0
     # via jupyterlab-server
+bcrypt==4.1.2
+    # via streamlit-authenticator
 beautifulsoup4==4.12.2
     # via nbconvert
 bleach==6.1.0
@@ -64,6 +66,8 @@ distro==1.9.0
     # via openai
 executing==2.0.1
     # via stack-data
+extra-streamlit-components==0.1.60
+    # via streamlit-authenticator
 fastjsonschema==2.19.1
     # via nbformat
 fqdn==1.5.1
@@ -273,6 +277,8 @@ pygments==2.17.2
     #   nbconvert
     #   qtconsole
     #   rich
+pyjwt==2.8.0
+    # via streamlit-authenticator
 python-dateutil==2.8.2
     # via
     #   arrow
@@ -284,7 +290,9 @@ python-json-logger==2.0.7
 pytz==2023.3.post1
     # via pandas
 pyyaml==6.0.1
-    # via jupyter-events
+    # via
+    #   jupyter-events
+    #   streamlit-authenticator
 pyzmq==25.1.2
     # via
     #   ipykernel
@@ -339,6 +347,11 @@ soupsieve==2.5
 stack-data==0.6.3
     # via ipython
 streamlit==1.29.0
+    # via
+    #   -r requirements.in
+    #   extra-streamlit-components
+    #   streamlit-authenticator
+streamlit-authenticator==0.2.3
     # via -r requirements.in
 tenacity==8.2.3
     # via streamlit
@@ -410,6 +423,5 @@ websocket-client==1.7.0
     # via jupyter-server
 widgetsnbextension==4.0.9
     # via ipywidgets
-pyodbc==5.0.1
 zipp==3.17.0
     # via importlib-metadata
