@@ -11,8 +11,8 @@ import choose_idea as ci
 
 def page_welcome():
     st.markdown("<h1 style='text-align: left; color: #808000;'>MIDORI</h1>", unsafe_allow_html=True)
-    st.write(f"Hello {st.session_state['current_user']}")
-    st.write("Welcome to Midori. Circular economy idea evaluator tool.")
+    st.write(f"Hello {st.session_state['current_user']}!")
+    st.write("Welcome to Midori, a circular economy idea evaluator tool.")
 
 def page_get_started():
     gs.get_started_page()
@@ -71,7 +71,7 @@ def main():
         st.session_state["type"] = None
 
     if 'authenticated' not in st.session_state:
-        st.session_state["authenticated"] = True # reset to False
+        st.session_state["authenticated"] = False # reset to False
         
     if 'session_initialized' not in st.session_state:
         st.session_state['current_user'] = None

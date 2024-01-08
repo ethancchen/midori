@@ -8,7 +8,7 @@ def page_business_zone():
     st.title("Business Zone Page")
     st.write("Lean Canvas Generated here")
 
-    st.write(st.session_state["choice"])
+    # st.write(st.session_state["choice"])
 
     lean_row = st.session_state['lean_row'] 
 

@@ -3,14 +3,18 @@ import streamlit as st
 import pandas as pd
 import api_calls as ac
 from io import BytesIO
+import re
 
 def preprocess(df):
-    """# Replace"""
-    # file_path = 'sample2.csv'
-    # df = pd.read_csv(file_path)
-    # st.write("Preview of the uploaded data:")
-    # st.write(df.head())
-    # return processed df
+    # Process the data, removing short problems and solutions.
+    df['solution'] = df['solution'].str.encode('utf-8', errors='ignore').str.decode('utf-8')
+    df['r_sent_cnt'] = df['solution'].apply(lambda x: len(re.findall('[^.!?]+[.!?]', str(x))))
+    df['r_char_cnt'] = df['solution'].apply(lambda x: len(str(x)))
+    df['p_char_cnt'] = df['problem'].apply(lambda x: len(str(x)))
+
+    result_data = df[(df['r_sent_cnt'] > 10 | (df['r_char_cnt'] >= 250)) & (df['p_char_cnt'] > 42)]
+    # Keep only 'problem' and 'solution' columns
+    df = result_data[['problem', 'id', 'solution']]
     return df
 
 def handle_button_press_to_business_zone():

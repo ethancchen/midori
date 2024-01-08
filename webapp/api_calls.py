@@ -55,7 +55,6 @@ def generate_ans(text):
     # # Yes
     # # Not Known"""
     ans = get_completion(prompt)
-    st.write(ans)
 
     # st.write(ans)
 
