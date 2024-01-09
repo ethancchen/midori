@@ -55,18 +55,13 @@ def generate_ans(text):
 
 
 def generate_ans_df(df):
-    ans_df = pd.DataFrame(columns=["relevance", "industry", "ten_R", "area_focus", "applicable", "heavy_investment", "monetary_benefits", "scalable", "payback_period"])
-
-    for index, row in df.iterrows():
+    def process_row(row):
         problem_value = str(row['problem'])
         solution_value = str(row['solution'])
-
         input_string = "Problem : " + problem_value + "\n" + "Solution : " + solution_value
+        return generate_ans(input_string)
 
-        ans = generate_ans(input_string)
-
-        # Assume ans is a DataFrame with the same columns as ans_df
-        ans_df = pd.concat([ans_df, ans], ignore_index=True)
+    ans_df = pd.concat(df.apply(process_row, axis=1).tolist(), ignore_index=True)
 
     return ans_df
 
