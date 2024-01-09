@@ -1,12 +1,7 @@
 from openai import OpenAI
-import json
-
-# openai.api_key = "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"
 
 def get_completion(prompt, engine = 'text-davinci-003'):
     client = OpenAI()
-    # OpenAI.api_key = "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"
-    print(OpenAI.api_key)
     response = client.completions.create(
         model = engine,
         prompt = prompt,
@@ -36,29 +31,12 @@ def generate_ans(text):
     Revenue streams: What are different types of revenue streams for this solution? Answer in paragraph form under 470 characters.
 
     """
-
-    # print(prompt)
-    ans = get_completion(prompt)
-
-    return ans
+    return get_completion(prompt)
 
 
 def get_data(text):
-
-    ans= generate_ans(text)
-    lines = [line for line in ans.splitlines() if line.strip()]
-
-    problem_summary = lines[0]
-    # print(problem_summary)
-    solution_summary = lines[1]
-    # print(solution_summary)
-    uniq_val_prop = lines[2]
-    key_metrics = lines[3]
-    unfair_advtg = lines[4]
-    channels = lines[5]
-    customer_seg = lines[6]
-    cost_struct = lines[7]
-    revenue_streams = lines[8]
-
-
-    return problem_summary,solution_summary, uniq_val_prop, key_metrics, unfair_advtg, channels, customer_seg,cost_struct, revenue_streams
+    """Strips spacing and returns the generated answer, with indices from 0 to 9 representing
+    problem_summary, solution_summary, uniq_val_prop, key_metrics, unfair_advtg, channels, customer_seg, cost_struct, revenue_streams.
+    """
+    lines = [line.strip() for line in generate_ans(text).splitlines() if line.strip()]
+    return lines[:9]

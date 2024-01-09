@@ -25,8 +25,6 @@ def page_choose_idea():
     ci.page_choose_idea()
 
 def page_business_zone():
-    # st.title("Business Zone Page")
-    # st.write("Lean Canvas Generated here")
     bz.page_business_zone()
 
 
@@ -71,7 +69,7 @@ def main():
         st.session_state["type"] = None
 
     if 'authenticated' not in st.session_state:
-        st.session_state["authenticated"] = False # reset to False
+        st.session_state["authenticated"] = False
         
     if 'session_initialized' not in st.session_state:
         st.session_state['current_user'] = None
@@ -94,10 +92,8 @@ def main():
         # Check for login.
         st.button("Login", on_click=handle_login, args=[db, userID_hash, pwd_hash, username])
             
-        # Create a new user if permitted.
         st.button("Create User", on_click=handle_user_creation, args=[db, userID_hash, pwd_hash])
     else:
-        # Clear the login elements
         if 'menu_selection' not in st.session_state:
             st.session_state['menu_selection'] = 'Welcome'  # Default page
             st.rerun()

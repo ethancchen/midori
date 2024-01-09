@@ -7,9 +7,7 @@ def change_page():
     st.session_state["menu_selection"] = "Business Zone"
 
 def handle_button_press_to_business_zone():
-
     if st.session_state['choice'] is not None:
-        # st.success(f"You entered: {st.session_state['choice']}")
         change_page()
 
     else:
@@ -22,11 +20,9 @@ def page_choose_idea():
     org_df = st.session_state["org_df"]
     ans_df = st.session_state['ans_df']
 
-    # ranked_df = st.session_state["ranked_df"]
-
     merged_df = pd.concat([org_df, ans_df], axis=1)
 
-    #rank pairs
+    # rank pairs
     x = 0.25 # filter to get only top x% of ranks
     num_top_pairs = int(x * len(merged_df))
     merged_df.sort_values(by="scores", ascending=False).head(num_top_pairs).head()
@@ -45,7 +41,6 @@ def page_choose_idea():
     choice = st.number_input("Enter an integer:", min_value=None, max_value=None, value=0, step=1, format="%d")
  
     row_by_index = merged_df.iloc[int(choice)]
-
     
     st.session_state['choice'] = choice
     st.session_state['lean_row'] = row_by_index
