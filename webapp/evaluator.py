@@ -7,15 +7,22 @@ import re
 
 def preprocess(df):
     # Process the data, removing short problems and solutions.
-    df['solution'] = df['solution'].str.encode('utf-8', errors='ignore').str.decode('utf-8')
-    df['r_sent_cnt'] = df['solution'].apply(lambda x: len(re.findall('[^.!?]+[.!?]', str(x))))
-    df['r_char_cnt'] = df['solution'].apply(lambda x: len(str(x)))
-    df['p_char_cnt'] = df['problem'].apply(lambda x: len(str(x)))
+    def process_row(row):
+        solution_text = str(row['solution']).encode('utf-8', errors='ignore').decode('utf-8')
+        problem_text = str(row['problem'])
 
-    result_data = df[(df['r_sent_cnt'] > 10 | (df['r_char_cnt'] >= 250)) & (df['p_char_cnt'] > 42)]
-    # Keep only 'problem' and 'solution' columns
-    df = result_data[['problem', 'id', 'solution']]
-    return df
+        return {
+            'solution': solution_text,
+            'r_sent_cnt': len(re.findall('[^.!?]+[.!?]', solution_text)),
+            'r_char_cnt': len(solution_text),
+            'p_char_cnt': len(problem_text)
+        }
+
+    processed_data = df.apply(process_row, axis=1, result_type='expand')
+
+    filtered_data = processed_data[(processed_data['r_sent_cnt'] > 10) | (processed_data['r_char_cnt'] >= 250) & (processed_data['p_char_cnt'] > 42)]
+
+    return filtered_data[['problem', 'id', 'solution']]
 
 def handle_button_press_to_business_zone():
     st.session_state["menu_selection"] = "Choose Idea"
@@ -23,7 +30,6 @@ def handle_button_press_to_business_zone():
 def page_evaluator():
     st.title("Evaluator Page")
     
-    # Proceed with the if-else loop based on session state type
     if st.session_state['type'] == "manual":
         prob = st.session_state['problem']
         sol = st.session_state['solution']
@@ -39,7 +45,9 @@ def page_evaluator():
             file_buffer = BytesIO(uploaded_file.getvalue())
             df = pd.read_csv(file_buffer)
             st.write(df.head())
-
+            preprocessed_df = preprocess(df)
+            st.write("Dataset with preprocessing")
+            st.write(preprocessed_df.head())
         ac.get_data(df)
     
     else:
