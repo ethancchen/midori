@@ -48,6 +48,8 @@ certifi==2023.11.17
     #   requests
 cffi==1.16.0
     # via argon2-cffi-bindings
+cfgv==3.4.0
+    # via pre-commit
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
@@ -62,6 +64,8 @@ decorator==5.1.1
     # via ipython
 defusedxml==0.7.1
     # via nbconvert
+distlib==0.3.8
+    # via virtualenv
 distro==1.9.0
     # via openai
 executing==2.0.1
@@ -70,6 +74,8 @@ extra-streamlit-components==0.1.60
     # via streamlit-authenticator
 fastjsonschema==2.19.1
     # via nbformat
+filelock==3.13.1
+    # via virtualenv
 fqdn==1.5.1
     # via jsonschema
 gitdb==4.0.11
@@ -82,6 +88,8 @@ httpcore==1.0.2
     # via httpx
 httpx==0.26.0
     # via openai
+identify==2.5.33
+    # via pre-commit
 idna==3.6
     # via
     #   anyio
@@ -118,14 +126,14 @@ jinja2==3.1.2
 json5==0.9.14
     # via jupyterlab-server
 jsonpointer==2.4
-    # via jsonschema
-jsonschema[format-nongpl]==4.20.0
     # via
     #   altair
     #   jupyter-events
     #   jupyterlab-server
     #   nbformat
 jsonschema-specifications==2023.12.1
+    # via jsonschema
+jsonschema[format-nongpl]==4.20.0
     # via jsonschema
 jupyter==1.0.0
     # via -r requirements.in
@@ -199,6 +207,8 @@ nbformat==5.9.2
     #   nbconvert
 nest-asyncio==1.5.8
     # via ipykernel
+nodeenv==1.8.0
+    # via pre-commit
 notebook==7.0.6
     # via jupyter
 notebook-shim==0.2.3
@@ -243,7 +253,11 @@ pillow==10.2.0
     #   -r requirements.in
     #   streamlit
 platformdirs==4.1.0
-    # via jupyter-core
+    # via
+    #   jupyter-core
+    #   virtualenv
+pre-commit==3.6.0
+    # via -r requirements.in
 prometheus-client==0.19.0
     # via jupyter-server
 prompt-toolkit==3.0.43
@@ -292,6 +306,7 @@ pytz==2023.3.post1
 pyyaml==6.0.1
     # via
     #   jupyter-events
+    #   pre-commit
     #   streamlit-authenticator
 pyzmq==25.1.2
     # via
@@ -411,6 +426,8 @@ urllib3==2.1.0
     # via requests
 validators==0.22.0
     # via streamlit
+virtualenv==20.25.0
+    # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit
 webcolors==1.13
@@ -425,3 +442,6 @@ widgetsnbextension==4.0.9
     # via ipywidgets
 zipp==3.17.0
     # via importlib-metadata
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools

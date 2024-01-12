@@ -4,3 +4,6 @@ openai
 streamlit
 streamlit_authenticator
 Pillow
+
+# Code quality
+pre_commit
