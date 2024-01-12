@@ -1,4 +1,5 @@
 import hashlib as hl
+from os import environ, getenv
 
 import business_zone as bz
 import choose_idea as ci
@@ -69,11 +70,15 @@ def page_change_user():
 
 
 def main():
-    # Initialize mongDB.
     db = mg.db_init()
 
     if "api_key" not in st.session_state:
-        st.session_state["api_key"] = "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"
+        if "OPENAI_API_KEY" not in environ:
+            raise EnvironmentError(
+                "Please include a valid OpenAI API Key as the environment variable 'OPENAI_API_KEY'."
+            )
+
+        st.session_state["api_key"] = getenv("OPENAI_API_KEY")
 
     if "type" not in st.session_state:
         st.session_state["type"] = None
