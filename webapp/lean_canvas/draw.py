@@ -1,11 +1,19 @@
-from PIL import Image, ImageDraw, ImageFont
-import os
 from pathlib import PurePath as pp
-import streamlit as st
+
+from PIL import Image, ImageDraw, ImageFont
 
 
-
-def draw(problem_summary,solution_summary, uniq_val_prop, key_metrics, unfair_advtg, channels, customer_seg,cost_struct, revenue_streams): 
+def draw(
+    problem_summary,
+    solution_summary,
+    uniq_val_prop,
+    key_metrics,
+    unfair_advtg,
+    channels,
+    customer_seg,
+    cost_struct,
+    revenue_streams,
+):
     # get the current working directory
     # current_working_directory = os.getcwd()
     # # print output to the console
@@ -15,13 +23,13 @@ def draw(problem_summary,solution_summary, uniq_val_prop, key_metrics, unfair_ad
     # Load the image
     # image_template_path = './images/lean_canvas_template.png'  # Update to the path of your Lean Canvas image
 
-    image_template_path = pp('images/lean_canvas_template.png')
+    image_template_path = pp("images/lean_canvas_template.png")
     image_template = Image.open(image_template_path.as_posix())
     draw = ImageDraw.Draw(image_template)
 
     # Choose a font and size
     # font_path = 'fonts/Montserrat-Black.otf'  # Update to the path of a font file
-    font_path = pp('fonts/Montserrat-Black.otf')
+    font_path = pp("fonts/Montserrat-Black.otf")
     font_size = 18
     font = ImageFont.truetype(font_path.as_posix(), font_size)
 
@@ -44,15 +52,60 @@ def draw(problem_summary,solution_summary, uniq_val_prop, key_metrics, unfair_ad
     vert_left_x6 = 1130
 
     box_coords = {
-        "Problem": (vert_left_x1, horiz_top_y1, vert_left_x1 + small_box_width, horiz_bottom_y2),
-        "Solution": (vert_left_x2, horiz_top_y1, vert_left_x2 + small_box_width, horiz_top_y1 + small_box_height),
-        "Key Metrics": (vert_left_x2, horiz_top_y2, vert_left_x2 + small_box_width, horiz_bottom_y2),
-        "Unique Value Proposition": (vert_left_x3, horiz_top_y1, vert_left_x3 + small_box_width, horiz_bottom_y2),
-        "Unfair Advantage": (vert_left_x5, horiz_top_y1, vert_left_x5 + small_box_width, horiz_top_y1 + small_box_height),
-        "Channels": (vert_left_x5, horiz_top_y2, vert_left_x5 + small_box_width, horiz_bottom_y2),
-        "Customer Segments": (vert_left_x6, horiz_top_y1, vert_left_x6 + small_box_width, horiz_bottom_y2),
-        "Cost Structure": (vert_left_x1, horiz_top_y3, vert_left_x1 + large_box_width, horiz_bottom_y3),
-        "Revenue Streams": (vert_left_x4, horiz_top_y3, vert_left_x6 + small_box_width, horiz_bottom_y3),
+        "Problem": (
+            vert_left_x1,
+            horiz_top_y1,
+            vert_left_x1 + small_box_width,
+            horiz_bottom_y2,
+        ),
+        "Solution": (
+            vert_left_x2,
+            horiz_top_y1,
+            vert_left_x2 + small_box_width,
+            horiz_top_y1 + small_box_height,
+        ),
+        "Key Metrics": (
+            vert_left_x2,
+            horiz_top_y2,
+            vert_left_x2 + small_box_width,
+            horiz_bottom_y2,
+        ),
+        "Unique Value Proposition": (
+            vert_left_x3,
+            horiz_top_y1,
+            vert_left_x3 + small_box_width,
+            horiz_bottom_y2,
+        ),
+        "Unfair Advantage": (
+            vert_left_x5,
+            horiz_top_y1,
+            vert_left_x5 + small_box_width,
+            horiz_top_y1 + small_box_height,
+        ),
+        "Channels": (
+            vert_left_x5,
+            horiz_top_y2,
+            vert_left_x5 + small_box_width,
+            horiz_bottom_y2,
+        ),
+        "Customer Segments": (
+            vert_left_x6,
+            horiz_top_y1,
+            vert_left_x6 + small_box_width,
+            horiz_bottom_y2,
+        ),
+        "Cost Structure": (
+            vert_left_x1,
+            horiz_top_y3,
+            vert_left_x1 + large_box_width,
+            horiz_bottom_y3,
+        ),
+        "Revenue Streams": (
+            vert_left_x4,
+            horiz_top_y3,
+            vert_left_x6 + small_box_width,
+            horiz_bottom_y3,
+        ),
     }
 
     # Define the text content for each box
@@ -69,22 +122,22 @@ def draw(problem_summary,solution_summary, uniq_val_prop, key_metrics, unfair_ad
     }
 
     # Function to wrap and position text within a box
-    def draw_text_in_box(draw, text, box, font, line_spacing = 4):
+    def draw_text_in_box(draw, text, box, font, line_spacing=4):
         x1, y1, x2, y2 = box
         box_width = x2 - x1
 
         # Split the text into words
         words = text.split()
         lines = []
-        current_line = ''
+        current_line = ""
 
         # Determine the height of a single line of text
-        single_line_height = font.getbbox('Ay')[3]  # Use characters like 'Ay' that have both ascenders and descenders
+        single_line_height = font.getbbox("Ay")[3]  # Use characters like 'Ay' that have both ascenders and descenders
 
         # Accumulate lines of text, breaking at words
         for word in words:
             # Add a space if not the first word in a line
-            test_line = current_line + (' ' if current_line else '') + word
+            test_line = current_line + (" " if current_line else "") + word
             test_line_width = draw.textlength(test_line, font=font)
             # If the word fits, continue the line
             if test_line_width <= box_width:
@@ -106,18 +159,8 @@ def draw(problem_summary,solution_summary, uniq_val_prop, key_metrics, unfair_ad
             else:
                 break  # Stop if there is no vertical space for more lines
 
-
     # Iterate over each box and draw the text
     for box_name, text in box_texts.items():
         draw_text_in_box(draw, text, box_coords[box_name], font)
 
-    # Save or display the updated canvas image
-    updated_canvas_path = 'images/drawn_lean_canvas.png'
-    # image_template.save(updated_canvas_path)
-    # image_template.show()
-
     return image_template
-
-
-
-# img = draw()

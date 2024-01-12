@@ -1,17 +1,14 @@
 from openai import OpenAI
 
-def get_completion(prompt, engine = 'text-davinci-003'):
+
+def get_completion(prompt, engine="text-davinci-003"):
     client = OpenAI()
-    response = client.completions.create(
-        model = engine,
-        prompt = prompt,
-        max_tokens = 3000,
-        n = 1
-    )
+    response = client.completions.create(model=engine, prompt=prompt, max_tokens=3000, n=1)
     return response.choices[0].text
 
+
 def generate_ans(text):
-    prompt=f"""
+    prompt = f"""
 
     ```{text}```
 
@@ -30,13 +27,15 @@ def generate_ans(text):
     Cost structure: What is the cost structure for this solution? Answer in one sentence under 470 characters.
     Revenue streams: What are different types of revenue streams for this solution? Answer in paragraph form under 470 characters.
 
-    """
+    """  # noqa: E501
     return get_completion(prompt)
 
 
 def get_data(text):
-    """Strips spacing and returns the generated answer, with indices from 0 to 9 representing
-    problem_summary, solution_summary, uniq_val_prop, key_metrics, unfair_advtg, channels, customer_seg, cost_struct, revenue_streams.
+    """
+    Strips spacing and returns the generated answer, with indices from 0 to 9 representing
+    problem_summary, solution_summary, uniq_val_prop, key_metrics,
+    unfair_advtg, channels, customer_seg, cost_struct, revenue_streams.
     """
     lines = [line.strip() for line in generate_ans(text).splitlines() if line.strip()]
     return lines[:9]
